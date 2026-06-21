@@ -1,0 +1,27 @@
+# Agent Instructions
+
+- Read `docs/spec.md` before changing architecture or service boundaries.
+- Read `docs/plan.md` before choosing implementation order.
+- Keep the top-level structure `frontend`, `backend`, `sandbox`, `db`, `docker`, `docs`.
+- State assumptions and tradeoffs before implementation; ask when requirements are ambiguous.
+- Prefer the minimum code that solves the requested milestone; do not add speculative abstractions.
+- Make surgical changes only; avoid unrelated refactors, formatting churn, or adjacent cleanup.
+- Define concrete verification criteria before coding and record what was checked.
+- Treat `backend/shared` as the source of truth for schemas, DB models, node catalog, and graph validation.
+- Do not put execution handlers in `shared`.
+- Agent output must be Graph Patch, not direct workflow persistence.
+- Show Agent-generated workflows as preview first; save only after user confirmation.
+- Store no secrets in workflow graph or node data.
+- Use `connection_id` references for credentials.
+- Encrypt credentials at rest with `cryptography`.
+- `backend/gateway` owns auth, tenant checks, permission checks, and save validation.
+- `backend/workflow_engine` owns workflow execution and MCP Tool Node execution.
+- `backend/agent_service` owns LangGraph planning and LiteLLM model calls.
+- `backend/mcp_server` owns external MCP discovery and the backend `/mcp` endpoint.
+- Use MCP Python SDK inside `backend/mcp_server`.
+- Use Streamable HTTP and HTTPS for production MCP traffic.
+- Code Node must call the separate `sandbox` service through workflow execution boundaries.
+- `sandbox` must manage disposable containers, non-root, no privileged mode, no Docker socket exposure, read-only FS, resource limits, timeout, and cleanup.
+- Prefer schema-first APIs with deterministic response shapes.
+- Log workflow runs, node runs, MCP tool calls, approval decisions, and sandbox executions.
+- Keep MVP scope tight; do not add marketplace, billing, enterprise RBAC, or Kubernetes unless requested.
